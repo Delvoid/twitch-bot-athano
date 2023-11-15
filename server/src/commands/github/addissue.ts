@@ -1,7 +1,7 @@
-import { createIssue } from '../handlers/github/createIssue';
-import type { BotCommand } from '../types';
-import { hasBotCommandParams } from './helpers/hasBotCommandParams';
-import { sendChatMessage } from './helpers/sendChatMessage';
+import { createIssue } from '../../handlers/github/createIssue';
+import type { BotCommand } from '../../types';
+import { hasBotCommandParams } from '../helpers/hasBotCommandParams';
+import { sendChatMessage } from '../helpers/sendChatMessage';
 
 export const addissue: BotCommand = {
   command: 'addissue',

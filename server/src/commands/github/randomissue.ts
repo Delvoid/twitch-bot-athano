@@ -1,7 +1,7 @@
-import { MINUTE_MS } from '../constants';
-import { fetchRandomIssue } from '../handlers/github/fetchRandomIssue';
-import type { BotCommand } from '../types';
-import { sendChatMessage } from './helpers/sendChatMessage';
+import { MINUTE_MS } from '../../constants';
+import { fetchRandomIssue } from '../../handlers/github/fetchRandomIssue';
+import type { BotCommand } from '../../types';
+import { sendChatMessage } from '../helpers/sendChatMessage';
 
 export const randomissue: BotCommand = {
   command: 'randomissue',

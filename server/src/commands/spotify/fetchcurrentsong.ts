@@ -1,5 +1,5 @@
-import { fetchCurrentlyPlaying } from '../handlers/spotify/fetchCurrentlyPlaying';
-import type { BotCommand } from '../types';
+import { fetchCurrentlyPlaying } from '../../handlers/spotify/fetchCurrentlyPlaying';
+import type { BotCommand } from '../../types';
 
 export const fetchcurrentsong: BotCommand = {
   command: 'fetchcurrentsong',

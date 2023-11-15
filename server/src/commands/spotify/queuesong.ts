@@ -1,10 +1,10 @@
 import { parseHTML } from 'linkedom';
-import { SECOND_MS } from '../constants';
-import { addSongToPlaybackQueue } from '../handlers/spotify/addSongToPlaybackQueue';
-import { getTrack } from '../handlers/spotify/getTrack';
-import type { BotCommand } from '../types';
-import { hasBotCommandParams } from './helpers/hasBotCommandParams';
-import { sendChatMessage } from './helpers/sendChatMessage';
+import { SECOND_MS } from '../../constants';
+import { addSongToPlaybackQueue } from '../../handlers/spotify/addSongToPlaybackQueue';
+import { getTrack } from '../../handlers/spotify/getTrack';
+import type { BotCommand } from '../../types';
+import { hasBotCommandParams } from '../helpers/hasBotCommandParams';
+import { sendChatMessage } from '../helpers/sendChatMessage';
 
 export const queuesong: BotCommand = {
   command: ['queuesong', 'qs', 'sr', 'songrequest'],

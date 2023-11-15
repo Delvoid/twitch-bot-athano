@@ -1,9 +1,9 @@
-import { SECOND_MS } from '../constants';
-import { getCurrentSpotifySong } from '../handlers/spotify/fetchCurrentlyPlaying';
-import { skipCurrentSong } from '../handlers/spotify/skipCurrentSong';
-import type { BotCommand } from '../types';
-import { sendChatMessage } from './helpers/sendChatMessage';
-import { songDetails } from './helpers/songDetail';
+import { SECOND_MS } from '../../constants';
+import { getCurrentSpotifySong } from '../../handlers/spotify/fetchCurrentlyPlaying';
+import { skipCurrentSong } from '../../handlers/spotify/skipCurrentSong';
+import type { BotCommand } from '../../types';
+import { sendChatMessage } from '../helpers/sendChatMessage';
+import { songDetails } from '../helpers/songDetail';
 
 export const skipsong: BotCommand = {
   command: ['skipsong', 'ss'],

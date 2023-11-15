@@ -1,8 +1,8 @@
-import { SECOND_MS } from '../constants';
-import { getPlaybackQueue } from '../handlers/spotify/getPlaybackQueue';
-import type { BotCommand } from '../types';
-import { sendChatMessage } from './helpers/sendChatMessage';
-import { songDetails } from './helpers/songDetail';
+import { SECOND_MS } from '../../constants';
+import { getPlaybackQueue } from '../../handlers/spotify/getPlaybackQueue';
+import type { BotCommand } from '../../types';
+import { sendChatMessage } from '../helpers/sendChatMessage';
+import { songDetails } from '../helpers/songDetail';
 
 export const songqueue: BotCommand = {
   command: ['songqueue', 'sq'],

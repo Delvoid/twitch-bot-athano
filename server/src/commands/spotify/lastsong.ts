@@ -1,8 +1,8 @@
-import { SECOND_MS } from '../constants';
-import { getLastSpotifySong } from '../handlers/spotify/fetchCurrentlyPlaying';
-import type { BotCommand } from '../types';
-import { sendChatMessage } from './helpers/sendChatMessage';
-import { songDetails } from './helpers/songDetail';
+import { SECOND_MS } from '../../constants';
+import { getLastSpotifySong } from '../../handlers/spotify/fetchCurrentlyPlaying';
+import type { BotCommand } from '../../types';
+import { sendChatMessage } from '../helpers/sendChatMessage';
+import { songDetails } from '../helpers/songDetail';
 
 export const lastsong: BotCommand = {
   command: ['lastsong', 'ls'],

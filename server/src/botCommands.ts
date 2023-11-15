@@ -1,47 +1,16 @@
-import { addburpee } from './commands/addburpee';
-import { addcommand } from './commands/addcommand';
-import { addissue } from './commands/addissue';
-import { addpushup } from './commands/addpushup';
-import { addsquat } from './commands/addsquat';
-import { commands } from './commands/commands';
-import { delvoid } from './commands/delvoid';
-import { fetchcurrentsong } from './commands/fetchcurrentsong';
-import { followage } from './commands/followage';
-import { forodor } from './commands/forodor';
-import { help } from './commands/help';
+import path from 'path';
+import fs from 'fs';
+import { addissue } from './commands/github/addissue';
+import { fetchcurrentsong } from './commands/spotify/fetchcurrentsong';
 import { hasBotCommandParams } from './commands/helpers/hasBotCommandParams';
 import { sendChatMessage } from './commands/helpers/sendChatMessage';
-import { issue } from './commands/issue';
-import { lastsong } from './commands/lastsong';
-import { lutf1sk } from './commands/lutf1sk';
-import { play } from './commands/play';
-import { point } from './commands/point';
-import { pointladder } from './commands/pointladder';
-import { queuesong } from './commands/queuesong';
-import { quote } from './commands/quote';
-import { randomissue } from './commands/randomissue';
-import { removealias } from './commands/removealias';
-import { removecommand } from './commands/removecommand';
-import { roll } from './commands/roll';
-import { setalias } from './commands/setalias';
-import { setcategory } from './commands/setcategory';
-import { setcooldown } from './commands/setcooldown';
-import { setdescription } from './commands/setdescription';
-import { setmessage } from './commands/setmessage';
-import { settags } from './commands/settags';
-import { settask } from './commands/settask';
-import { settitle } from './commands/settitle';
-import { skipsong } from './commands/skipsong';
-import { skiptts } from './commands/skiptts';
-import { song } from './commands/song';
-import { songqueue } from './commands/songqueue';
-import { task } from './commands/task';
-import { tts } from './commands/tts';
-import { uptime } from './commands/uptime';
-import { viewers } from './commands/viewers';
-import { voices } from './commands/voices';
-import { welcome } from './commands/welcome';
-import { whoami } from './commands/whoami';
+import { lastsong } from './commands/spotify/lastsong';
+import { queuesong } from './commands/spotify/queuesong';
+import { randomissue } from './commands/github/randomissue';
+import { skipsong } from './commands/spotify/skipsong';
+import { song } from './commands/spotify/song';
+import { songqueue } from './commands/spotify/songqueue';
+
 import Config from './config';
 import { fetchChatters } from './handlers/twitch/helix/fetchChatters';
 import { playSound } from './playSound';
@@ -53,18 +22,19 @@ import { mention } from './utils/mention';
 
 const botCommands: BotCommand[] = [];
 
-export function loadBotCommands() {
+export async function loadBotCommands() {
   botCommands.length = 0;
-  const customCommands = loadCustomCommands();
+  const customCommands = await loadCustomCommands();
   const spotifyCommands = loadSpotifyCommands();
   const githubCommands = loadGitHubCommands();
   botCommands.push(...spotifyCommands, ...githubCommands, ...customCommands);
 }
 
-export function loadCustomCommands(): BotCommand[] {
+export async function loadCustomCommands(): Promise<BotCommand[]> {
   if (Config.features.commands_handler) {
     const messageCommands = loadMessageCommands();
 
+    const complexBotCommands = await loadComplexCommands();
     // Need to merge the commands from the database with the message commands
     // as the messageCommands can contain aliases for the complex commands
     const loadedCommands = [...complexBotCommands];
@@ -100,46 +70,37 @@ export function loadGitHubCommands(): BotCommand[] {
   return [];
 }
 
+async function loadComplexCommands(): Promise<BotCommand[]> {
+  const dirname = path.resolve();
+  const commandsDir = path.join(dirname, 'src/commands');
+
+  const fileExtension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
+
+  const commandFiles = fs
+    .readdirSync(commandsDir)
+    .filter((file) => file.endsWith(fileExtension) && !file.includes('helpers') && !file.includes('spotify'));
+
+  const loadedCommands: BotCommand[] = [];
+
+  for (const file of commandFiles) {
+    try {
+      const fileName = path.basename(file, fileExtension);
+      const commandModule = (await import(`./commands/${fileName}`)) as { [key: string]: BotCommand };
+      const command = commandModule[fileName] as BotCommand | undefined;
+      if (command) {
+        loadedCommands.push(command);
+      }
+    } catch (error) {
+      console.error(`Error loading command ${file}:`, error);
+    }
+  }
+
+  return loadedCommands;
+}
+
 const spotifyCommands: BotCommand[] = [skipsong, song, songqueue, queuesong, lastsong, fetchcurrentsong];
 
 const githubCommands: BotCommand[] = [addissue, randomissue];
-
-const complexBotCommands: BotCommand[] = [
-  addburpee,
-  addcommand,
-  addpushup,
-  addsquat,
-  commands,
-  delvoid,
-  followage,
-  forodor,
-  help,
-  issue,
-  lutf1sk,
-  play,
-  point,
-  pointladder,
-  quote,
-  removealias,
-  removecommand,
-  roll,
-  setalias,
-  setcategory,
-  setcooldown,
-  setdescription,
-  setmessage,
-  settags,
-  settask,
-  settitle,
-  skiptts,
-  task,
-  tts,
-  uptime,
-  viewers,
-  voices,
-  welcome,
-  whoami,
-];
 
 const soundMatchRegex = /%sound:([a-zA-Z0-9-_.]+)%/g;
 const messageMatchRegex = /%emit:([a-zA-Z0-9-_.]+)%/g;
